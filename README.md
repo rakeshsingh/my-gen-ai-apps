@@ -24,8 +24,8 @@ This project is a part of my self-development Retrieval-Augmented Generation (RA
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/emre570/simple-rag-app.git
-   cd simple-rag-app
+   git clone https://github.com/isurulkh/RAG-App-using-Ollama-and-LangChain.git
+   cd RAG-App-using-Ollama-and-LangChai
    ```
 2. Install the required packages:
    ```bash
@@ -42,7 +42,7 @@ This project is a part of my self-development Retrieval-Augmented Generation (RA
 2. Run the application:
 
    ```bash
-   streamlit run [path_to_app_folder]/webui.py
+   streamlit run webui.py
    ```
 
    Alternatively, you can open `webui.bat` file.
