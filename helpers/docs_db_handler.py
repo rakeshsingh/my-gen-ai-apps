@@ -1,23 +1,29 @@
 import os
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
+# from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
+from langchain_community.document_loaders import DirectoryLoader
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+# SPLIT THE DOCS INTO CHUNKS
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.schema.document import Document
 
 def load_docs(data_folder):
+    print(f"Loading documents from {data_folder}")
     if not os.path.exists(data_folder):
-        os.makedirs(data_folder)
-    
-    doc_loader = PyPDFDirectoryLoader(data_folder)
-    
-    docs = doc_loader.load()
+        raise FileNotFoundError(f"The specified data folder does not exist: {data_folder}")
+    loader = DirectoryLoader(data_folder, glob="**/*.md", recursive=True)
+    docs = loader.load()
+    print(f"Loaded {len(docs)} documents from {data_folder}")
     return docs
 
-def split_docs(docs):
+
+def split_docs(docs: list[Document]):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
                                                    chunk_overlap=80,
                                                    length_function=len,
                                                    is_separator_regex=False)
-    return text_splitter.split_text(docs)
+    return text_splitter.split_documents(docs)
 
 def init_db(chunks, embeddings_model, folder_path, embeddings):
     """
@@ -47,3 +53,13 @@ def add_db_docs(vectorstore, data_path, db_path, embeddings_model):
             chunks = split_docs(content)
             vectorstore.add_texts(chunks)
     vectorstore.save_local(db_path)
+    
+    
+if __name__ == "__main__":
+    import config_handler
+    print('came here')
+    data_folder = config_handler.get_data_folder()
+    # data_folder = '/Users/raksingh/personal/github/my-ollama-rag-app/data/'
+    print(data_folder)
+    load_docs(data_folder)
+    

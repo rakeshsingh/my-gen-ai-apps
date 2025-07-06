@@ -1,8 +1,7 @@
 import os
-from indexer import split_docs
 from embedder import call_embed_model
 from retriever import retrieve_docs
-from docs_db_handler import init_db, add_db_docs, load_docs
+from docs_db_handler import init_db, add_db_docs, load_docs, split_docs
 from langchain_core.tools import tool
 
 @tool
