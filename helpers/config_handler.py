@@ -41,5 +41,20 @@ def get_db_path(config_file='config/dev.ini'):
     
     return db_path  
 
+def get_embedding_model(config_file='config/dev.ini'):
+    """Gets the embedding model name from the configuration file."""
+    config = configparser.ConfigParser()
+    config.read(config_file)
+    
+    if 'General' not in config or 'EMBEDDING_MODEL' not in config['General']:
+        raise ValueError("EMBEDDING_MODEL not found in the configuration file.")
+    
+    embedding_model = config['General']['EMBEDDING_MODEL']
+    
+    if not embedding_model:
+        raise ValueError("EMBEDDING_MODEL is empty in the configuration file.")
+    
+    return embedding_model
+
 if __name__ == "__main__":
     read_config()

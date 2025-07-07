@@ -1,0 +1,16 @@
+.*/__pycache__/.*.py[cod]$
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.env   
+*.DS_Store
+*.vscode/
+config.ini
+data/
+db/
+docs/
+# Ignore Python bytecode files
+__pycache__/
