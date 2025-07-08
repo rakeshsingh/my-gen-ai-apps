@@ -14,3 +14,4 @@ db/
 docs/
 # Ignore Python bytecode files
 __pycache__/
+sessions/
