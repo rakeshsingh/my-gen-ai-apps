@@ -2,7 +2,8 @@ import os
 from langchain_ollama import OllamaEmbeddings
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_community.vectorstores import Chroma
+
 
 
 def index_files(config_handler):
@@ -36,11 +37,23 @@ def index_files(config_handler):
     if not embeddings_model:
         raise ValueError("Embedding model name is not set in the configuration.")
     embeddings = OllamaEmbeddings(model=embeddings_model)
-    vector_store = InMemoryVectorStore(embeddings)
     print("Embedding documents...")
-    #storing documents 
+    
+    #store
+    persist_directory = "/Users/raksingh/personal/github/my-ollama-rag-app/db/chroma_db"#storing documents 
+    vector_store = Chroma.from_documents(
+        documents=chunks,
+        embedding=embeddings,
+        persist_directory=persist_directory
+    )   
     document_ids = vector_store.add_documents(documents=chunks)
     print(f"Stored {len(document_ids)} document IDs in the vector store.")
     print(document_ids[:3])
     
     return vector_store
+
+if __name__ == "__main__":
+    import config_handler  # Initialize your configuration handler
+    index_files(config_handler)  # Call the function to index files and store them in the vector store
+   
+    

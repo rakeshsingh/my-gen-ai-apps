@@ -3,7 +3,7 @@ import json
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 llm = ChatOllama(model="llama3.2") # Replace 'llama3' with your chosen model
     
 # Get directory to store session histories

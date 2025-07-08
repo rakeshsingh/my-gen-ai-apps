@@ -1,5 +1,5 @@
 import streamlit as st
-from langchain.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 from langchain.schema import HumanMessage, AIMessage
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import LLMChain

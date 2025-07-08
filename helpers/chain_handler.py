@@ -1,5 +1,5 @@
 from langchain import hub
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_retrieval_chain, create_history_aware_retriever
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -7,8 +7,8 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-def setup_chain(model_name, retriever):
-    llm = ChatOllama(model=model_name, base_url="http://127.0.0.1:11434", keep_alive=-1)
+def setup_chain(model, retriever):
+    llm = ChatOllama(model=model, base_url="http://127.0.0.1:11434", keep_alive=-1)
     
     contextualize_q_system_prompt = (
         "Given a chat history and the latest user question "
@@ -31,8 +31,7 @@ def setup_chain(model_name, retriever):
     system_prompt = (
         "You are an assistant named Benedict. Your task is question-answering."
         "Use the following pieces of retrieved context to answer "
-        "the question. If you don't know the answer, say the user that you "
-        "don't know and user must search the web."
+        "the question. If you don't know the answer, make your best guess."
         "Keep the answer concise and short."
         "\n\n"
         "{context}"
@@ -45,7 +44,6 @@ def setup_chain(model_name, retriever):
         ]
     )
     question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
-
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
     
     return rag_chain
