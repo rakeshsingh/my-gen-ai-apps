@@ -44,10 +44,3 @@ def index_files(config_handler):
     print(document_ids[:3])
     
     return vector_store
-
-
-    
-if __name__ == "__main__":
-    index_files()  # Call the function to index files and store them in the vector store
-   
-    
