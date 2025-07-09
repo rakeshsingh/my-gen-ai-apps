@@ -1,3 +1,5 @@
+# Guide and tutorial to build Generative AI bots, and agents on your local device
+
 ## Overview
 
 This project, contains codes written by me as part of a learning excercise to learn more about Generative AI concepts, and large language models. 
@@ -12,7 +14,6 @@ The skeleton of this repository was taken from [https://github.com/isurulkh/RAG-
 
 
 ## Getting Started
-
 ### Prerequisites
 
 - Python 3.12 or higher
@@ -23,8 +24,7 @@ The skeleton of this repository was taken from [https://github.com/isurulkh/RAG-
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/isurulkh/RAG-App-using-Ollama-and-LangChain.git
-   cd RAG-App-using-Ollama-and-LangChai
+   git clone https://github.com/rakeshsingh/my-ollama-rag-app
    ```
 2. Install the required packages:
    ```bash
@@ -45,5 +45,4 @@ The skeleton of this repository was taken from [https://github.com/isurulkh/RAG-
 
 
 ## Contact
-
 For any questions or suggestions, please open an issue in the repository.

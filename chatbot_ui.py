@@ -13,7 +13,7 @@ st.title("My Local Chatbot")
 st.sidebar.header("Settings")
 
 # Dropdown for model selection
-model_options = ["llama3.2"]
+model_options = ["llama3.2","deepseek-r1"]
 MODEL = st.sidebar.selectbox("Choose a Model", model_options, index=0)
 
 # Inputs for max history and context size
