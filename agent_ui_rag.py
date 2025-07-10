@@ -3,10 +3,10 @@ import os
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings
-from helpers.chain_handler import setup_chain
+from helpers.chain_handler import setup_chain, setup_agent
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_ollama import ChatOllama
-
+from helpers.tools import tools
 
 
 # Load environment variables
@@ -17,6 +17,7 @@ st.set_page_config(layout="wide")
 st.title("📚 My Local Chatbot")
 
 st.sidebar.header("Settings")
+MODEL_PROVIDER = "ollama"  # Default model provider
 MODEL = st.sidebar.selectbox("Choose Ollama Model", ["llama3.2","deepseek-r1:1.5b"], index=0)
 MAX_HISTORY = st.sidebar.number_input("Max History", 1, 10, 2)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1024)
@@ -27,15 +28,7 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # ---- LangChain Components ---- #
-llm = ChatOllama(
-        model=MODEL, 
-        temperature=0.8, 
-        num_predict=256, 
-        keep_alive=-1,
-        streaming=True, 
-        max_tokens=CONTEXT_SIZE, 
-        return_source_documents=True  
-        )
+
 embeddings = OllamaEmbeddings(
     model="mxbai-embed-large"
 )
@@ -43,7 +36,7 @@ embeddings = OllamaEmbeddings(
 # Initialize Chroma vector store
 vectorstore = Chroma(persist_directory="/Users/raksingh/personal/github/my-ollama-rag-app/db/chroma_db", embedding_function=embeddings)
 retriever = vectorstore.as_retriever(search_type="similarity")
-qa = setup_chain(MODEL, retriever, chain_type=CHAIN_TYPE, context_size=CONTEXT_SIZE)
+qa = setup_agent(MODEL_PROVIDER, MODEL)
 
 # ---- Display Chat History ---- #
 for message in st.session_state.chat_history:
@@ -75,16 +68,16 @@ if query := st.chat_input("Say something"):
         print(query)
         retrieved_docs = retriever.invoke(query)
         print(retrieved_docs)
-        full_response = (
+        result = (
             "No relevant documents found." if not retrieved_docs
             else 
                 # qa.invoke({"user_question": query}).get("result", "No response generated.")
-                qa.invoke({"input": query, "history": st.session_state.chat_history, "context": retrieved_docs})
+                qa.invoke({"input": query, "history": st.session_state.chat_history, "context": retrieved_docs, "tools": tools, "intermediate_steps": []})
         )
-        print(full_response['answer'])
+        print(type(result))
         # st.markdown(full_response['answer'])
         # Display the full response
-        response_container.markdown(full_response['answer'])
+        response_container.markdown(result)
         # st.session_state.chat_history.append({"role": "AI", "content": full_response})
-        st.session_state.chat_history.append(AIMessage(full_response['answer']))
+        st.session_state.chat_history.append(AIMessage(result))
         trim_memory()
