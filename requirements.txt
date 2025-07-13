@@ -6,3 +6,4 @@ streamlit
 unstructured
 unstructured[md]
 duckduckgo-search
+watchdog

@@ -1,10 +1,12 @@
-# Guide and tutorial to build Generative AI bots, and agents on your local device
+# My GenAI Apps (a guide on how to build GenAI bots, and agents on your local device)
 
 ## Overview
 
-This project, contains codes written by me as part of a learning excercise to learn more about Generative AI concepts, and large language models. 
+This project, contains codes written by me as part of a learning excercise to learn more about Generative AI concepts, and large language models.
+This project is a quick utilization of several tools and libraries built by the opensource community. Thank you Ollama, Langchain, and Streamlit. As they say, ``If I have seen further it is by standing on the shoulders of Giants``.
 
-The skeleton of this repository was taken from [https://github.com/isurulkh/RAG-App-using-Ollama-and-LangChain]. Thanks @isurulkh for your great introduction.
+
+PS: The skeleton of this project was taken from [https://github.com/isurulkh/RAG-App-using-Ollama-and-LangChain]. Thanks @isurulkh for your great introduction.
 
 ## Example Gen-AI ChatBots, and Agents
 1.  A basic gen-ai powered chatbot using ollama, and langchain, that reads data from your local directory, and answers questions based on it [chatbot_cli.py](chatbot_cli.py)

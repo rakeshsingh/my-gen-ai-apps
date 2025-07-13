@@ -1,17 +1,19 @@
 from dotenv import load_dotenv
-from helpers.chain_handler import setup_agent, setup_retriever
+from langchain_chroma import Chroma
+from langchain_ollama import OllamaEmbeddings
+from helpers.chain_handler import setup_agent
 from langchain_core.messages import AIMessage, HumanMessage
+from langchain_ollama import ChatOllama
 from helpers.tools import tools
-from helpers import config_handler
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 import streamlit as st
-from langchain.tools.retriever import create_retriever_tool
+
+st_callback = StreamlitCallbackHandler(st.container())
 
 
 
 # Load environment variables
 load_dotenv()
-st_callback = StreamlitCallbackHandler(st.container())
 
 # ---- Streamlit UI ---- #
 st.title("📚 My Local Chatbot")
@@ -23,24 +25,29 @@ MAX_HISTORY = st.sidebar.number_input("Max History", 1, 10, 2)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1024)
 CHAIN_TYPE='stuff'  # Default chain type, can be extended later
 MODEL_PROVIDER = "ollama"  # Default model provider
-MAX_ITERATIONS = 4
-EMBEDDING_MODEL = config_handler.get_embedding_model()
-PERSISTENT_DIRECTORY = config_handler.get_db_path()
+config = {"configurable": {"thread_id": "test-thread"}}
+
 # ---- Session State Setup ---- #
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # ---- LangChain Components ---- #
-retriever =setup_retriever(persistent_directory=PERSISTENT_DIRECTORY, embedding_model=EMBEDDING_MODEL)
+embeddings = OllamaEmbeddings(
+    model="mxbai-embed-large"
+)
+
+# Initialize Chroma vector store
+vectorstore = Chroma(persist_directory="/Users/raksingh/personal/github/my-ollama-rag-app/db/chroma_db", embedding_function=embeddings)
+retriever = vectorstore.as_retriever(search_type="similarity")
 agent = setup_agent(MODEL_PROVIDER, MODEL)
 # ---- Display Chat History ---- #
-for message in st.session_state.chat_history:
-    if isinstance(message, AIMessage):
-        with st.chat_message("AI"):
-            st.markdown(message.content)
-    elif isinstance(message, HumanMessage):
-        with st.chat_message("Human"):
-            st.markdown(message.content)
+# for message in st.session_state.chat_history:
+#     if isinstance(message, AIMessage):
+#         with st.chat_message("AI"):
+#             st.markdown(message.content)
+#     elif isinstance(message, HumanMessage):
+#         with st.chat_message("Human"):
+#             st.markdown(message.content)
 
 # # ---- Trim Chat Memory ---- #
 def trim_memory():
@@ -62,16 +69,23 @@ if query := st.chat_input("Say something"):
         print(query)
         retrieved_docs = retriever.invoke(query)
         print(retrieved_docs)
+        # messages = [HumanMessage(content=query)]
         response = agent.invoke(
             {
-                "input": query, 
-                "history": st.session_state.chat_history, 
-                "context": retrieved_docs, 
-                # "max_iterations": MAX_ITERATIONS,
-                "tools": tools, 
-                "agent_scratchpad": ""
-                }
-            )       
+                "messages": 
+                    [
+                        {
+                        "role": "user",
+                        "content": query,
+                        "history": st.session_state.chat_history, 
+                        "context": retrieved_docs, 
+                        "tools": tools, 
+                        "agent_scratchpad": ""
+                        }
+                    ]
+            }
+            ,config
+        )       
         print("Result from agent:")
         print(response)
         # Display the full response
@@ -80,3 +94,14 @@ if query := st.chat_input("Say something"):
         # st.session_state.chat_history.append({"role": "AI", "content": full_response})
         st.session_state.chat_history.append(AIMessage(response["output"]))
         trim_memory()
+            
+# if query := st.chat_input():
+#     st.chat_message("user").write(query)
+#     with st.chat_message("assistant"):
+#         st_callback = StreamlitCallbackHandler(st.container())
+#         retrieved_docs = retriever.invoke(query)
+#         print("Retrieved documents:", retrieved_docs)
+#         response = agent.invoke(
+#             {"input": query, "history": st.session_state.chat_history, "context": retrieved_docs}, {"callbacks": [st_callback]}
+#         )
+#         st.write(response["output"])

@@ -1,0 +1,2 @@
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+pip install -r requirements.txt

@@ -1,5 +1,4 @@
 from langchain_ollama import ChatOllama
-
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.tools import tool
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder

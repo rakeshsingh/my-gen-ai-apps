@@ -1,17 +1,20 @@
 from dotenv import load_dotenv
-from helpers.chain_handler import setup_agent, setup_retriever
+from langchain_chroma import Chroma
+from langchain_ollama import OllamaEmbeddings
+from helpers.chain_handler import setup_agent
 from langchain_core.messages import AIMessage, HumanMessage
+from langchain_ollama import ChatOllama
 from helpers.tools import tools
-from helpers import config_handler
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 import streamlit as st
 from langchain.tools.retriever import create_retriever_tool
+
+st_callback = StreamlitCallbackHandler(st.container())
 
 
 
 # Load environment variables
 load_dotenv()
-st_callback = StreamlitCallbackHandler(st.container())
 
 # ---- Streamlit UI ---- #
 st.title("📚 My Local Chatbot")
@@ -24,15 +27,25 @@ CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1
 CHAIN_TYPE='stuff'  # Default chain type, can be extended later
 MODEL_PROVIDER = "ollama"  # Default model provider
 MAX_ITERATIONS = 4
-EMBEDDING_MODEL = config_handler.get_embedding_model()
-PERSISTENT_DIRECTORY = config_handler.get_db_path()
 # ---- Session State Setup ---- #
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # ---- LangChain Components ---- #
-retriever =setup_retriever(persistent_directory=PERSISTENT_DIRECTORY, embedding_model=EMBEDDING_MODEL)
+embeddings = OllamaEmbeddings(
+    model="mxbai-embed-large"
+)
+
+# Initialize Chroma vector store
+vectorstore = Chroma(persist_directory="/Users/raksingh/personal/github/my-ollama-rag-app/db/chroma_db", embedding_function=embeddings)
+retriever = vectorstore.as_retriever(search_type="similarity")
+retriever_tool = create_retriever_tool(
+    retriever,
+    "local search",
+    "Search for information about myself and my team members. For any questions about me, my team, and my workplace you must use this tool!",
+)
 agent = setup_agent(MODEL_PROVIDER, MODEL)
+
 # ---- Display Chat History ---- #
 for message in st.session_state.chat_history:
     if isinstance(message, AIMessage):
