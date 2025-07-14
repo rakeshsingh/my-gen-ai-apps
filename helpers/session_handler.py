@@ -3,14 +3,12 @@ import json
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_ollama import ChatOllama
-llm = ChatOllama(model="llama3.2") # Replace 'llama3' with your chosen model
+
     
 # Get directory to store session histories
 current_directory = os.path.dirname(os.path.abspath(__file__))
 history_dir = os.path.join(current_directory, "sessions")
 os.makedirs(history_dir, exist_ok=True)
-
 store = {}
 
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
@@ -23,7 +21,7 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
                 for msg in messages:
                     if msg['role'] == 'human':
                         history.add_user_message(msg['content'])
-                    elif msg['role'] == 'ai':
+                    elif msg['role'] == 'assistant':
                         history.add_ai_message(msg['content'])
                 store[session_id] = history
         else:
@@ -38,7 +36,7 @@ def save_session_history(session_id: str):
             if isinstance(message, HumanMessage):
                 messages.append({"role": "human", "content": message.content})
             elif isinstance(message, AIMessage):
-                messages.append({"role": "ai", "content": message.content})
+                messages.append({"role": "assistant", "content": message.content})
         history_file = os.path.join(history_dir, f"{session_id}.json")
         with open(history_file, "w") as f:
             json.dump(messages, f, indent=2)

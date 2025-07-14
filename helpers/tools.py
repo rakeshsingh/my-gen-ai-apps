@@ -1,7 +1,7 @@
 from langchain.tools import tool
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain.tools.retriever import create_retriever_tool
-from helpers import chain_handler, config_handler, indexer
+from helpers import config_handler, indexer
 
 EMBEDDING_MODEL = config_handler.get_embedding_model()
 PERSISTENT_DIRECTORY = config_handler.get_db_path()
