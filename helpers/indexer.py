@@ -3,7 +3,7 @@ from langchain_ollama import OllamaEmbeddings
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
-from helpers import config_handler
+from . import config_handler
 
 EMBEDDING_MODEL = config_handler.get_embedding_model()
 PERSISTENT_DIRECTORY = config_handler.get_db_path()
@@ -57,7 +57,6 @@ def index_files(config_handler):
     return vector_store
 
 if __name__ == "__main__":
-    import config_handler  # Initialize your configuration handler
     index_files(config_handler)  # Call the function to index files and store them in the vector store
    
     
