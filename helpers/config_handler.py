@@ -1,15 +1,14 @@
 import configparser
 
-def read_config(filename='config.ini'):
+
+
+def read_config(filename='config/dev.ini'):
     """Reads the configuration from a .ini file."""
     config = configparser.ConfigParser()
     config.read(filename)
     if not config.sections():
         raise ValueError("Configuration file is empty or not found.")   
-    # print(f"Database Host: {db_host}")
-    # print(f"Database Port: {db_port} (Type: {type(db_port)})")
-    # print(f"Database User: {db_user}")
-    # print(f"Database Password: {db_password}")
+
 
 def get_data_folder(config_file='config/dev.ini'):
     """Gets the data folder path from the configuration file."""
@@ -26,6 +25,7 @@ def get_data_folder(config_file='config/dev.ini'):
     
     return data_folder  
 
+
 def get_db_path(config_file='config/dev.ini'):
     """Gets the database path from the configuration file."""
     config = configparser.ConfigParser()
@@ -40,6 +40,7 @@ def get_db_path(config_file='config/dev.ini'):
         raise ValueError("DB_PATH is empty in the configuration file.")
     
     return db_path  
+
 
 def get_embedding_model(config_file='config/dev.ini'):
     """Gets the embedding model name from the configuration file."""
@@ -56,5 +57,8 @@ def get_embedding_model(config_file='config/dev.ini'):
     
     return embedding_model
 
+
+
 if __name__ == "__main__":
     read_config()
+    print(get_embedding_model())

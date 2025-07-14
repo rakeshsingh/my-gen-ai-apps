@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
-from helpers.chain_handler import setup_agent, setup_retriever
+from helpers.chain_handler import setup_agent
+from helpers.indexer import setup_retriever
 from langchain_core.messages import AIMessage, HumanMessage
-from helpers.tools import tools
+from helpers.tools import tools 
 from helpers import config_handler
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 import streamlit as st
@@ -26,6 +27,7 @@ MODEL_PROVIDER = "ollama"  # Default model provider
 MAX_ITERATIONS = 4
 EMBEDDING_MODEL = config_handler.get_embedding_model()
 PERSISTENT_DIRECTORY = config_handler.get_db_path()
+
 # ---- Session State Setup ---- #
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -63,20 +65,24 @@ if query := st.chat_input("Say something"):
         retrieved_docs = retriever.invoke(query)
         print(retrieved_docs)
         response = agent.invoke(
-            {
-                "input": query, 
-                "history": st.session_state.chat_history, 
-                "context": retrieved_docs, 
-                # "max_iterations": MAX_ITERATIONS,
-                "tools": tools, 
-                "agent_scratchpad": ""
-                }
+            {"messages":[
+                    {
+                    "role": "user",
+                    "content": query, 
+                    "history": st.session_state.chat_history, 
+                    "context": retrieved_docs, 
+                    # "max_iterations": MAX_ITERATIONS,
+                    "tools": tools, 
+                    "agent_scratchpad": ""
+                    }]
+            }
             )       
         print("Result from agent:")
-        print(response)
+        print(response["messages"][-1].content) # Output the final answer
+
         # Display the full response
         # response_container.markdown(result)
-        st.write(response["output"])
+        st.write(response["messages"][-1].content)
         # st.session_state.chat_history.append({"role": "AI", "content": full_response})
-        st.session_state.chat_history.append(AIMessage(response["output"]))
+        st.session_state.chat_history.append(AIMessage(response["messages"][-1].content))
         trim_memory()

@@ -5,27 +5,18 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chat_models import init_chat_model
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_chroma import Chroma
-# from langgraph.prebuilt import create_react_agent
-# from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.prebuilt import create_react_agent
+from langgraph.checkpoint.memory import InMemorySaver
 
 
-
-# memory = InMemorySaver()
-def setup_retriever(persistent_directory, embedding_model):
-    print(persistent_directory)
-    print(embedding_model)
-    embeddings = OllamaEmbeddings(model=embedding_model)
-    # Initialize Chroma vector store
-    vectorstore = Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
-    retriever = vectorstore.as_retriever(search_type="similarity")
-    return retriever
 
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 def setup_agent(model_provider, model):
     model = init_chat_model(str(model_provider) + str(':') + str(model))
-    template = '''
+    system_message = ''' You are a helpful assistant. Anaser the user's question as best as you can. Use the tools available to you.'''
+    '''
         You are a helpful assistant.
         Answer the user's question: {input} as best you as can, considering the conversation history: {history}, 
         and the context: {context} provided by the user.
@@ -34,26 +25,16 @@ def setup_agent(model_provider, model):
         You should use your Thoughts:{agent_scratchpad} while coming back with an answer.
     '''
     
-    # '''
-    #     You are a helpful assistant.
-    #     Answer the user's question as best you as can, considering the history of the conversation, and the context provided by the user.
-    #     If you are not sure about an answer, you may use the tools available to you to find the answers
-    #     You have access to the following tools: {tools}. Action Input, needs to be extracted from the input question.
-    #     You should use your Thought:{agent_scratchpad} while coming back with an answer.
-    #     Context: {context}
-    #     Question: {input}
-    #     Chat History: {history}
-    # '''
-                # Action: the action to take, should be one of [{tool_names}]
 
-        
     # prompt = PromptTemplate.from_template(template)
-    prompt = ChatPromptTemplate.from_template(template)
+    prompt = ChatPromptTemplate.from_messages([
+                ("system", system_message),
+                ("placeholder", "{messages}"),
+            ])
     from helpers.tools import tools
     tools = tools
-    agent = create_tool_calling_agent(model, tools=tools, prompt=prompt)
-    agent_executor = AgentExecutor(agent=agent,tools=tools,verbose=True, handle_parsing_errors=True)
-                                #    input_variables=["input", "context", "history", "agent_scratchpad"])
+    memory = InMemorySaver()
+    agent_executor = create_react_agent(model=model, tools=tools, prompt=prompt)
     return agent_executor
     
     
