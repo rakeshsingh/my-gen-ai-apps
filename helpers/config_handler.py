@@ -58,7 +58,18 @@ def get_embedding_model(config_file='config/dev.ini'):
     return embedding_model
 
 
+def get_model(config_file='config/dev.ini'):
+    config = configparser.ConfigParser()
+    config.read(config_file)
+    if 'General' not in config or 'MODEL' not in config['General']:
+        raise ValueError("MODEL not found in the configuration file.")
+    model = config['General']['MODEL']
+    if not model:
+        raise ValueError("MODEL is empty in the configuration file.")
+    return model
+
 
 if __name__ == "__main__":
     read_config()
     print(get_embedding_model())
+    print(get_model())

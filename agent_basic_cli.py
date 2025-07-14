@@ -12,12 +12,11 @@ llm = ChatOllama(model="llama3.2", temperature=0.8, max_tokens=1000)
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful AI assistant."),
-        MessagesPlaceholder(variable_name="chat_history"),
+        MessagesPlaceholder(variable_name="history"),
         ("human", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad"),
     ]
 )
-
 
 # Create the agent
 agent = create_tool_calling_agent(llm, tools, prompt)
@@ -31,5 +30,5 @@ agent_executor = AgentExecutor(
 )
 
 # Example usage
-result = agent_executor.invoke({"input": "What is 5 * 7?"})
+result = agent_executor.invoke({"input": "What is 5 * 7?", "history":[]})
 print(result)

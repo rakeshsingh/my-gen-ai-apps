@@ -2,28 +2,28 @@ import os
 import uuid
 from helpers import indexer, session_handler, config_handler, chain_handler
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_core.messages import AIMessage, HumanMessage
-from langchain_ollama import ChatOllama
 
+
+EMBEDDING_MODEL = config_handler.get_embedding_model()
+PERSISTENT_DIRECTORY = config_handler.get_db_path()
+MODEL_PROVIDER = "ollama"  # Default model provider
+MODEL = "llama3.2"
 
 session_id = str(uuid.uuid4())
-vector_store = indexer.index_files(config_handler)  # Index files and store them in the vector store
+retriever = indexer.setup_retriever(persistent_directory=PERSISTENT_DIRECTORY, embedding_model=EMBEDDING_MODEL)
 chat_history = session_handler.get_session_history(session_id)
 
 while True:
     question = input("\n Enter your question (or type 'exit' to quit): ")
     if question.lower() == 'exit':
         break
-    
-    retriever = vector_store.as_retriever(search_type="similarity")
-    # retriever = retrieve_docs(question, vector_store, similar_docs_count = 5, see_content=False)
     # ---- LangChain Components ---- #
-    rag_chain = chain_handler.setup_chain("llama3.2", retriever)
+    rag_chain = chain_handler.setup_chain_chatbot(model=MODEL, retriever=retriever)
     conversational_rag_chain = RunnableWithMessageHistory(
         rag_chain,
         lambda _: chat_history,
         input_messages_key="input",
-        history_messages_key="chat_history",
+        history_messages_key="history",
         output_messages_key="answer",
     )
     

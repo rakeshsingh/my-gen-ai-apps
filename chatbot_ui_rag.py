@@ -1,11 +1,10 @@
 import streamlit as st
 import os
 from dotenv import load_dotenv
-from langchain_chroma import Chroma
-from langchain_ollama import OllamaEmbeddings
-from helpers.chain_handler import setup_chain
+from helpers.chain_handler import setup_chain_chatbot
+from helpers.indexer import setup_retriever
+from helpers.config_handler import get_embedding_model, get_db_path
 from langchain_core.messages import AIMessage, HumanMessage
-from langchain_ollama import ChatOllama
 
 
 
@@ -20,30 +19,16 @@ st.sidebar.header("Settings")
 MODEL = st.sidebar.selectbox("Choose Ollama Model", ["llama3.2","deepseek-r1:1.5b"], index=0)
 MAX_HISTORY = st.sidebar.number_input("Max History", 1, 10, 2)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1024)
-CHAIN_TYPE='stuff'  # Default chain type, can be extended later
-
+# CHAIN_TYPE='stuff'  # Default chain type, can be extended later
+EMBEDDING_MODEL = get_embedding_model()
+PERSISTENT_DIRECTORY = get_db_path()
 # ---- Session State Setup ---- #
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # ---- LangChain Components ---- #
-llm = ChatOllama(
-        model=MODEL, 
-        temperature=0.8, 
-        num_predict=256, 
-        keep_alive=-1,
-        streaming=True, 
-        max_tokens=CONTEXT_SIZE, 
-        return_source_documents=True  
-        )
-embeddings = OllamaEmbeddings(
-    model="mxbai-embed-large"
-)
-
-# Initialize Chroma vector store
-vectorstore = Chroma(persist_directory="/Users/raksingh/personal/github/my-ollama-rag-app/db/chroma_db", embedding_function=embeddings)
-retriever = vectorstore.as_retriever(search_type="similarity")
-qa = setup_chain(MODEL, retriever, chain_type=CHAIN_TYPE, context_size=CONTEXT_SIZE)
+retriever = setup_retriever(persistent_directory=PERSISTENT_DIRECTORY, embedding_model=EMBEDDING_MODEL)
+qa = setup_chain_chatbot(MODEL, retriever)
 
 # ---- Display Chat History ---- #
 for message in st.session_state.chat_history:

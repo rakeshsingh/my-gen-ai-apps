@@ -38,36 +38,33 @@ def setup_agent(model_provider, model):
     return agent_executor
     
     
-def setup_chain(model, retriever, chain_type="stuff", context_size=8192):
+def setup_chain(model, retriever, context_size=8192):
     llm = ChatOllama(
         model=model, 
         temperature=0.8, 
         num_predict=256, 
         keep_alive=-1,
         streaming=True, 
-        max_tokens=context_size, 
+        max_tokens=context_size,
         return_source_documents=True  
         )
 
     template = """ 
         You are a helpful assistant. Answer the following questions accurately, considering the history of the conversation, and the context provided.
-
         Context: {context}
         Chat history: {history}
         User question: {input}
-        
         """
 
     prompt = ChatPromptTemplate.from_template(template)
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
     # rag_chain = create_retrieval_chain(retriever, question_answer_chain, chain_type=chain_type)
     rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-
     ### Answer question ###
     return rag_chain
 
 
-def setup_chain2(model, retriever):
+def setup_chain_chatbot(model, retriever):
     llm = ChatOllama(model=model, temperature=0.8, num_predict=256, keep_alive=-1)
     
     contextualize_q_system_prompt = (
@@ -80,7 +77,7 @@ def setup_chain2(model, retriever):
     contextualize_q_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", contextualize_q_system_prompt),
-            MessagesPlaceholder("chat_history"),
+            MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]
     )
@@ -99,7 +96,7 @@ def setup_chain2(model, retriever):
     qa_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", system_prompt),
-            MessagesPlaceholder("chat_history"),
+            MessagesPlaceholder("history"),
             ("human", "{input}"),
         ]
     )

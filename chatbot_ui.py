@@ -1,9 +1,10 @@
 import streamlit as st
 from langchain_ollama import ChatOllama
-from langchain.schema import HumanMessage, AIMessage
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
+
+
 
 # ---- Streamlit Setup ---- #
 st.set_page_config(layout="wide")
@@ -15,10 +16,10 @@ st.sidebar.header("Settings")
 # Dropdown for model selection
 model_options = ["llama3.2","deepseek-r1"]
 MODEL = st.sidebar.selectbox("Choose a Model", model_options, index=0)
-
 # Inputs for max history and context size
 MAX_HISTORY = st.sidebar.number_input("Max History", min_value=1, max_value=10, value=2, step=1)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", min_value=1024, max_value=16384, value=8192, step=1024)
+
 
 # ---- Function to Clear Memory When Settings Change ---- #
 def clear_memory():
