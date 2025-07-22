@@ -1,20 +1,19 @@
-[tool.poetry]
-name = "my-ollama-rag-app"
+[project]
+name = "my-gen-ai-apps"
 version = "0.1.0"
-description = "my ollama rag app"
+description = "my gen ai apps"
 authors = ["Rakesh Singh <kumar.rakesh@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-langchain = "^0.3.26"
-langchain-ollama = "^0.3.3"
-langchain-chroma = "^0.2.4"
-langchain-community = "^0.3.27"
-streamlit = "^1.46.1"
-unstructured = {extras = ["md"], version = "^0.18.3"}
-duckduckgo-search = "^8.1.1"
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+dependencies = [
+    "duckduckgo-search>=8.1.1",
+    "langchain>=0.3.26",
+    "langchain-chroma>=0.2.4",
+    "langchain-community>=0.3.27",
+    "langchain-ollama>=0.3.6",
+    "langgraph>=0.5.4",
+    "pytest>=8.4.1",
+    "streamlit>=1.47.0",
+    "unstructured[md]>=0.18.9",
+    "watchdog>=6.0.0",
+]

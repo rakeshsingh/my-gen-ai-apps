@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from helpers.chain_handler import setup_agent
 from helpers.indexer import setup_retriever
 from langchain_core.messages import AIMessage, HumanMessage
@@ -11,7 +11,7 @@ from langchain.tools.retriever import create_retriever_tool
 
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 st_callback = StreamlitCallbackHandler(st.container())
 
 # ---- Streamlit UI ---- #

@@ -8,3 +8,4 @@ unstructured[md]
 duckduckgo-search
 watchdog
 pytest
+langgraph

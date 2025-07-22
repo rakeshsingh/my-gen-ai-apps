@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from helpers.chain_handler import setup_chain_chatbot
 from helpers.indexer import setup_retriever
 from helpers.config_handler import get_embedding_model, get_db_path
@@ -9,7 +9,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 
 # ---- Streamlit UI ---- #
 st.set_page_config(layout="wide")
@@ -60,12 +60,10 @@ if query := st.chat_input("Say something"):
         print(query)
         retrieved_docs = retriever.invoke(query)
         print(retrieved_docs)
-        full_response = (
-            "No relevant documents found." if not retrieved_docs
-            else 
-                # qa.invoke({"user_question": query}).get("result", "No response generated.")
-                qa.invoke({"input": query, "history": st.session_state.chat_history, "context": retrieved_docs})
-        )
+        if not retrieved_docs:
+            full_response = {"answer": "No relevant documents found."}
+        else:
+            full_response = qa.invoke({"input": query, "history": st.session_state.chat_history, "context": retrieved_docs})
         print(full_response['answer'])
         # st.markdown(full_response['answer'])
         # Display the full response
