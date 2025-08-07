@@ -1,8 +1,6 @@
 from langchain_ollama import ChatOllama
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-from langchain.tools import tool
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from typing import List, Dict
 from helpers.tools import tools
 
 # Define the LLM
@@ -30,5 +28,6 @@ agent_executor = AgentExecutor(
 )
 
 # Example usage
-result = agent_executor.invoke({"input": "What is 5 * 7?", "history":[]})
+result = agent_executor.invoke({"input": "What is 5 * 7?", "history": []})
 print(result)
+

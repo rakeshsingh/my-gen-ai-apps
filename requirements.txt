@@ -9,3 +9,5 @@ duckduckgo-search
 watchdog
 pytest
 langgraph
+strands-agents
+strands-agents-tools

@@ -1,8 +1,8 @@
 import configparser
 
+CONFIG_FILE_PATH='config/dev.ini'
 
-
-def read_config(filename='config/dev.ini'):
+def read_config(filename=CONFIG_FILE_PATH):
     """Reads the configuration from a .ini file."""
     config = configparser.ConfigParser()
     config.read(filename)
@@ -10,7 +10,7 @@ def read_config(filename='config/dev.ini'):
         raise ValueError("Configuration file is empty or not found.")   
 
 
-def get_data_folder(config_file='config/dev.ini'):
+def get_data_folder(config_file=CONFIG_FILE_PATH):
     """Gets the data folder path from the configuration file."""
     config = configparser.ConfigParser()
     config.read(config_file)
@@ -26,7 +26,7 @@ def get_data_folder(config_file='config/dev.ini'):
     return data_folder  
 
 
-def get_db_path(config_file='config/dev.ini'):
+def get_db_path(config_file=CONFIG_FILE_PATH):
     """Gets the database path from the configuration file."""
     config = configparser.ConfigParser()
     config.read(config_file)
@@ -42,7 +42,7 @@ def get_db_path(config_file='config/dev.ini'):
     return db_path  
 
 
-def get_embedding_model(config_file='config/dev.ini'):
+def get_embedding_model(config_file=CONFIG_FILE_PATH):
     """Gets the embedding model name from the configuration file."""
     config = configparser.ConfigParser()
     config.read(config_file)
@@ -58,7 +58,7 @@ def get_embedding_model(config_file='config/dev.ini'):
     return embedding_model
 
 
-def get_model(config_file='config/dev.ini'):
+def get_model(config_file=CONFIG_FILE_PATH):
     config = configparser.ConfigParser()
     config.read(config_file)
     if 'General' not in config or 'MODEL' not in config['General']:
