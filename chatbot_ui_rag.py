@@ -1,11 +1,10 @@
 import streamlit as st
 import os
 # from dotenv import load_dotenv
-from helpers.chain_handler import setup_chain_chatbot
+from helpers.llm_handler import setup_chain_chatbot
 from helpers.indexer import setup_retriever
 from helpers.config_handler import get_embedding_model, get_db_path
 from langchain_core.messages import AIMessage, HumanMessage
-
 
 
 # Load environment variables

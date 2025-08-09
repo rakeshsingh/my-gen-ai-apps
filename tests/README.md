@@ -8,7 +8,7 @@ The following modules are tested:
 
 1. **test_config_handler.py** - Tests for configuration file handling
 2. **test_docs_db_handler.py** - Tests for document database operations
-3. **test_chain_handler.py** - Tests for LangChain chain setup and management
+3. **test_llm_handler.py** - Tests for LangChain chain setup and management
 4. **test_tools.py** - Tests for custom tools (math, search, retriever)
 5. **test_retriever.py** - Tests for document retrieval functionality
 6. **test_session_handler.py** - Tests for chat session management

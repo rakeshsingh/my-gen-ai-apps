@@ -1,5 +1,5 @@
 # from dotenv import load_dotenv
-from helpers.chain_handler import setup_agent
+from helpers.llm_handler import setup_agent
 from helpers.indexer import setup_retriever
 from langchain_core.messages import AIMessage, HumanMessage
 from helpers.tools import tools 
@@ -19,7 +19,8 @@ st.title("📚 My Local Chatbot")
 st.set_page_config(layout="wide")
 # ---- Steamlit Sidebar ---- #
 st.sidebar.header("Settings")
-MODEL = st.sidebar.selectbox("Choose Ollama Model", ["llama3.2","deepseek-r1:1.5b"], index=0)
+MODEL = st.sidebar.selectbox("Choose Ollama Model", ["llama3.2","deepseek-r1:8b", "gemma3:4b"], index=0)
+
 MAX_HISTORY = st.sidebar.number_input("Max History", 1, 10, 2)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1024)
 CHAIN_TYPE='stuff'  # Default chain type, can be extended later

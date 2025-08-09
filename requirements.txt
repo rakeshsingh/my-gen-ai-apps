@@ -11,3 +11,5 @@ pytest
 langgraph
 strands-agents
 strands-agents-tools
+ddgs
+wikipedia

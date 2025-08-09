@@ -1,6 +1,6 @@
 import os
 import uuid
-from helpers import indexer, session_handler, config_handler, chain_handler
+from helpers import indexer, session_handler, config_handler, llm_handler
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
 
@@ -18,7 +18,7 @@ while True:
     if question.lower() == 'exit':
         break
     # ---- LangChain Components ---- #
-    rag_chain = chain_handler.setup_chain_chatbot(model=MODEL, retriever=retriever)
+    rag_chain = llm_handler.setup_chain_chatbot(model=MODEL, retriever=retriever)
     conversational_rag_chain = RunnableWithMessageHistory(
         rag_chain,
         lambda _: chat_history,
