@@ -1,6 +1,6 @@
 import os
 from langchain_ollama import OllamaEmbeddings
-from langchain_community.document_loaders import DirectoryLoader, TextLoader, CSVLoader, PyPDFLoader, Docx2txtLoader, UnstructuredMarkdownLoader
+from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, UnstructuredMarkdownLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from . import config_handler
@@ -13,7 +13,6 @@ DATA_FOLDER = config_handler.get_data_folder()
 loader_mapping = {
         ".txt": TextLoader,
         ".md": UnstructuredMarkdownLoader,
-        # ".csv": CSVLoader,
         ".pdf": PyPDFLoader,
         ".docx": Docx2txtLoader,
     }
@@ -38,8 +37,6 @@ def setup_retriever(persistent_directory, embedding_model, search_type="similari
 
 def load_multiple_file_types(directory_path):
     """Load multiple file types using loader mapping"""    
-    # Define loader mapping for different file extensions
-    
     all_documents = []
     
     # Walk through directory and load files based on extension
@@ -66,18 +63,12 @@ def index_files():
     """     
     Indexes files from the data folder and returns the indexed chunks.
     """
-    
-    #load
-    # loader = DirectoryLoader(DATA_FOLDER, glob=["**/*.md","**/*.txt","**/*.pdf","**/*.docx"], recursive=True)
-    # docs = loader.load()
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
                                                    chunk_overlap=80,
                                                    length_function=len,
                                                    is_separator_regex=False)
-    #------- embed ----------
     # moved the embedding logic to setup_vector_store function
     vector_store = setup_vector_store(persistent_directory=PERSISTENT_DIRECTORY, embedding_model=EMBEDDING_MODEL)
-    # docs = load_multiple_file_types(DATA_FOLDER)
     
     # Walk through directory and load files based on extension
     for root, dirs, files in os.walk(DATA_FOLDER):
@@ -92,7 +83,6 @@ def index_files():
                     loader_class = loader_mapping[file_ext]
                     loader = loader_class(file_path)
                     documents = loader.load()
-                    # all_documents.extend(documents)
                     print(f"Loaded {len(documents)} documents from {file}")
                     #split
                     chunks = splitter.split_documents(documents)
@@ -103,10 +93,7 @@ def index_files():
                     print(document_ids[:3])
                 except Exception as e:
                     print(f"Error loading {file}: {str(e)}")
-    #print(f"First chunk: {chunks[0].page_content[:100]}...")  # Print first 100 characters of the first chunk for debugging
     return vector_store
 
 if __name__ == "__main__":
     index_files()  # Call the function to index files and store them in the vector store
-   
-    

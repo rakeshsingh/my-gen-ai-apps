@@ -1,4 +1,3 @@
-import os
 import uuid
 from helpers import indexer, session_handler, config_handler, llm_handler
 from langchain_core.runnables.history import RunnableWithMessageHistory

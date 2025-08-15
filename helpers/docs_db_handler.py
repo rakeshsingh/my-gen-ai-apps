@@ -1,9 +1,6 @@
 import os
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import DirectoryLoader
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-# SPLIT THE DOCS INTO CHUNKS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 
@@ -42,7 +39,6 @@ def add_db_docs(vectorstore, data_path, db_path, embeddings_model):
     Load documents from the folder, check if they exist in the vectorstore, and add them if they don't.
     """
     documents = load_docs(data_path)
-    #chunks = split_docs(documents)
     for document in documents:
         content = document.page_content
         embedding = embeddings_model.embed_query(content)
@@ -58,7 +54,5 @@ if __name__ == "__main__":
     import config_handler
     print('came here')
     data_folder = config_handler.get_data_folder()
-    # data_folder = '/Users/raksingh/personal/github/my-ollama-rag-app/data/'
     print(data_folder)
     load_docs(data_folder)
-    

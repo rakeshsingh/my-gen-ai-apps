@@ -1,13 +1,10 @@
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_retrieval_chain, create_history_aware_retriever
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chat_models import init_chat_model
-from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain_chroma import Chroma
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import InMemorySaver
-
 
 
 def format_docs(docs):
@@ -16,17 +13,7 @@ def format_docs(docs):
 def setup_agent(model_provider, model):
     model = init_chat_model(str(model_provider) + str(':') + str(model))
     system_message = ''' You are a helpful assistant. Anaser the user's question as best as you can. Use the tools available to you.'''
-    '''
-        You are a helpful assistant.
-        Answer the user's question: {input} as best you as can, considering the conversation history: {history}, 
-        and the context: {context} provided by the user.
-        If you are not sure about an answer, you may use the tools: {tools} available to you to find the answers. 
-        Inputs to the tools need to be extracted from the user question. Do not use the same tool more than once.
-        You should use your Thoughts:{agent_scratchpad} while coming back with an answer.
-    '''
-    
 
-    # prompt = PromptTemplate.from_template(template)
     prompt = ChatPromptTemplate.from_messages([
                 ("system", system_message),
                 ("placeholder", "{messages}"),
@@ -58,9 +45,7 @@ def setup_chain(model, retriever, context_size=8192):
 
     prompt = ChatPromptTemplate.from_template(template)
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    # rag_chain = create_retrieval_chain(retriever, question_answer_chain, chain_type=chain_type)
     rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-    ### Answer question ###
     return rag_chain
 
 
