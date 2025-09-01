@@ -1,24 +1,39 @@
-# My Generative AI Apps 
-A step by step guide on how to build Generative AI chatbots, and agents on your local device, using Ollama, Langchain, and Streamlit.
+# My Generative AI Apps 🤖
 
-## Overview
-This project, contains codes written by me as part of an exercise to learn more about Generative AI, and the Large Language model concepts. This project is a quick utilization of several tools and libraries built by the Opensource community. Thank you Ollama, Langchain, and Streamlit. As they say, ``If I have seen further it is by standing on the shoulders of Giants``.
+Build powerful AI chatbots and agents locally using **Ollama**, **LangChain**, and **Streamlit**.
 
-PS: The skeleton of this project was taken from [https://github.com/isurulkh/RAG-App-using-Ollama-and-LangChain]. Thanks @isurulkh for your great introduction.
+## 🎯 What You'll Build
 
-## Example Gen-AI ChatBots, and Agents
+This repository contains complete implementations of AI chatbots and agents that run entirely on your local machine. Perfect for learning generative AI concepts hands-on.
 
-### ChatBots
-1. [chatbot_cli.py](chatbot_cli.py) - A basic gen-ai powered chatbot using ollama, and langchain, that reads data from your local directory, and answers questions based on it.
-2. [chatbot_ui.py](chatbot_ui.py) - A simple gen-ai chatbot built using ollama, and langchain, with an ui built using streamlit. 
-3. [chatbot_ui_rag.py](chatbot_ui_rag.py) - A simple gen-ai chatbot using ollama, langchain, and ui using streamlit. Enhanced further by a RAG workflow powered by Chroma DB.
+**Key Technologies:**
+- 🦙 **Ollama** - Local LLM runtime
+- 🔗 **LangChain** - AI application framework  
+- 🎨 **Streamlit** - Web UI framework
+- 📊 **Chroma DB** - Vector database for RAG
 
-### Agents
-4. [agent_cli.py](agent_cli.py) - A command-line agent implementation using LangChain with tool integration capabilities.
-5. [agent_ui_rag.py](agent_ui_rag.py) - A simple Agent built using ollama, langchain, and ui using streamlit. Enhanced further by a RAG workflow powered by Chroma DB, and a set of custom and langchain provided tools.
-6. [agent_ui_mcp.py](agent_ui_mcp.py) - An agent with Model Context Protocol (MCP) integration for enhanced context handling.
+> *"If I have seen further, it is by standing on the shoulders of Giants"*
 
-## Helper Modules and Configuration
+**Credits:** Initial project structure inspired by [@isurulkh's RAG App](https://github.com/isurulkh/RAG-App-using-Ollama-and-LangChain)
+
+## 🚀 Available Applications
+
+### 💬 ChatBots
+| Application | Description | Features |
+|-------------|-------------|----------|
+| [chatbot_cli.py](chatbot_cli.py) | Command-line chatbot | Basic Q&A using local documents |
+| [chatbot_ui.py](chatbot_ui.py) | Web-based chatbot | Simple Streamlit interface |
+| [chatbot_ui_rag.py](chatbot_ui_rag.py) | RAG-enhanced chatbot | Advanced context retrieval with Chroma DB |
+
+### 🤖 Agents
+| Application | Description | Features |
+|-------------|-------------|----------|
+| [agent_cli.py](agent_cli.py) | Command-line agent | Tool integration capabilities |
+| [agent_ui_rag.py](agent_ui_rag.py) | RAG-enhanced agent | Custom tools + RAG workflow |
+| [agent_ui_mcp.py](agent_ui_mcp.py) | MCP-enabled agent | Weather tools via Model Context Protocol |
+
+
+## 📁 Project Structure
 
 ### Helper Modules (`helpers/` directory)
 - [indexer.py](helpers/indexer.py) - Document indexing utility for creating vector embeddings from markdown files
@@ -27,12 +42,13 @@ PS: The skeleton of this project was taken from [https://github.com/isurulkh/RAG
 - [tools.py](helpers/tools.py) - Custom tools and utilities for agent functionality
 - [session_handler.py](helpers/session_handler.py) - Session management for maintaining conversation state
 - [config_handler.py](helpers/config_handler.py) - Configuration file parser and handler
+- [agent_handler.py](helpers/agent_handler.py) - Agent workflow management and execution utilities
 - [simple_mcp_server.py](helpers/simple_mcp_server.py) - Simple Model Context Protocol server implementation
 
 ### Configuration Files (`config/` directory)
 - [dev.ini](config/dev.ini) - Main configuration file containing settings for data folders, models, and other parameters
 
-## How to use this project
+## 🛠️ Quick Start
 
 ### Prerequisites
 
@@ -42,30 +58,30 @@ PS: The skeleton of this project was taken from [https://github.com/isurulkh/RAG
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/rakeshsingh/my-ollama-rag-app
+   git clone https://github.com/rakeshsingh/my-gen-ai-apps/
    cd my-gen-ai-apps
    ```
 
-2. Install the required packages:
+2. **Install the required packages:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Download and install Ollama:
+3. **Download and install Ollama:**
    - Visit [https://ollama.ai](https://ollama.ai) to download Ollama for your operating system
    - Install the required LLM model:
    ```bash
    ollama pull llama3.2
    ```
 
-4. Configure the application:
+4. **Configure the application:**
    - Copy and modify the configuration file in `config/dev.ini`
    - Update the **DATA_FOLDER** variable to point to a directory containing your markdown files
    - Adjust other settings like model names, chunk sizes, etc. as needed
 
-5. Index your documents:
+5. **Index your documents:**
    ```bash
    python -m helpers.indexer
    ```
@@ -101,8 +117,7 @@ PS: The skeleton of this project was taken from [https://github.com/isurulkh/RAG
 - **Command-line agents:**
   ```bash
   # LangChain-based CLI agent
-  python agent_cli_langchain.py
-  
+  python agent_cli.py
   ```
 
 ## Contact

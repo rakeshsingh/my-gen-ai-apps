@@ -16,3 +16,6 @@ docs/
 # Ignore Python bytecode files
 __pycache__/
 sessions/
+node_modules/
+package.json
+package-lock.json

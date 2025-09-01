@@ -4,37 +4,40 @@ from langchain.chains import create_retrieval_chain, create_history_aware_retrie
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chat_models import init_chat_model
 from langgraph.prebuilt import create_react_agent
-from langgraph.checkpoint.memory import InMemorySaver
 
 
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-def setup_agent(model_provider, model):
-    model = init_chat_model(str(model_provider) + str(':') + str(model))
-    system_message = ''' You are a helpful assistant. Anaser the user's question as best as you can. Use the tools available to you.'''
 
-    prompt = ChatPromptTemplate.from_messages([
-                ("system", system_message),
-                ("placeholder", "{messages}"),
-            ])
+def setup_agent(model_provider, model):
+    model = init_chat_model(str(model_provider) + str(":") + str(model))
+    system_message = """ You are a helpful assistant. Anaser the user's question as best as you can. Use the tools available to you."""
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system_message),
+            ("placeholder", "{messages}"),
+        ]
+    )
     from helpers.tools import tools
+
     tools = tools
-    memory = InMemorySaver()
+    # memory = InMemorySaver()
     agent_executor = create_react_agent(model=model, tools=tools, prompt=prompt)
     return agent_executor
-    
-    
+
+
 def setup_chain(model, retriever, context_size=8192):
     llm = ChatOllama(
-        model=model, 
-        temperature=0.8, 
-        num_predict=256, 
+        model=model,
+        temperature=0.8,
+        num_predict=256,
         keep_alive=-1,
-        streaming=True, 
+        streaming=True,
         max_tokens=context_size,
-        return_source_documents=True  
-        )
+        return_source_documents=True,
+    )
 
     template = """ 
         You are a helpful assistant. Answer the following questions accurately, considering the history of the conversation, and the context provided.
@@ -51,7 +54,7 @@ def setup_chain(model, retriever, context_size=8192):
 
 def setup_chain_chatbot(model, retriever):
     llm = ChatOllama(model=model, temperature=0.8, num_predict=256, keep_alive=-1)
-    
+
     contextualize_q_system_prompt = (
         "Given a chat history and the latest user question "
         "which might reference context in the chat history, "
@@ -87,5 +90,5 @@ def setup_chain_chatbot(model, retriever):
     )
     question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
-    
+
     return rag_chain
