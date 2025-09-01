@@ -37,7 +37,6 @@ This repository contains complete implementations of AI chatbots and agents that
 
 ### Helper Modules (`helpers/` directory)
 - [indexer.py](helpers/indexer.py) - Document indexing utility for creating vector embeddings from markdown files
-- [docs_db_handler.py](helpers/docs_db_handler.py) - Database handler for document storage and retrieval using Chroma DB
 - [llm_handler.py](helpers/llm_handler.py) - LangChain workflow management and chain creation utilities
 - [tools.py](helpers/tools.py) - Custom tools and utilities for agent functionality
 - [session_handler.py](helpers/session_handler.py) - Session management for maintaining conversation state
@@ -53,7 +52,6 @@ This repository contains complete implementations of AI chatbots and agents that
 ### Prerequisites
 
 - Python 3.12 or higher
-- Required Python packages (see `requirements.txt`)
 - Ollama Installation with llama3.2 installed
 
 ### Installation
@@ -61,11 +59,13 @@ This repository contains complete implementations of AI chatbots and agents that
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/rakeshsingh/my-gen-ai-apps/
-   cd my-gen-ai-apps
    ```
 
-2. **Install the required packages:**
+2. **Setup the development environment and install the required packages:**
    ```bash
+   python3 -m venv ~/.venv/my-gen-ai-apps
+   source ~/.venv/my-gen-ai-apps/bin/activate
+   cd my-gen-ai-apps
    pip install -r requirements.txt
    ```
 
@@ -74,6 +74,8 @@ This repository contains complete implementations of AI chatbots and agents that
    - Install the required LLM model:
    ```bash
    ollama pull llama3.2
+   ollama pull mxbai-embed-large
+   ollama pull gemma3:4b
    ```
 
 4. **Configure the application:**

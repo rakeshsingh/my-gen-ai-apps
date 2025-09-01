@@ -12,7 +12,7 @@ def add(x: int, y: int) -> int:
     return x + y
 
 @mcp.tool(description="Get the geographic location such as latitude and longitude of a given address or a city")
-def get_geolocation_coordinates(address:str) -> dict:
+def get_geolocation_coordinates(address: str) -> dict:
     """Get the latitude and longitude of an address"""
     geolocator = Nominatim(user_agent="my_agent")
     location = geolocator.geocode(address)
@@ -24,7 +24,7 @@ def get_geolocation_coordinates(address:str) -> dict:
     return location_dict
 
 @mcp.tool(description="Get the weekly and daily forecast for a given latitude and longiude")
-def get_weather_by_coordinates(latitude:str, longitude:str):
+def get_weather_by_coordinates(latitude: str, longitude: str):
     """
     Get weather data from NWS API using latitude and longitude coordinates.
     
@@ -76,7 +76,7 @@ def get_weather_by_coordinates(latitude:str, longitude:str):
         print(f"Error parsing weather data: {e}")
         return None
 
-#run the mcp server
+# run the mcp server
 mcp.run(transport="streamable-http")
 
 
